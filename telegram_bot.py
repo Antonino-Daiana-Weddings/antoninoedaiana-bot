@@ -22,16 +22,25 @@ def update(update: Update, context: CallbackContext) -> None:
     if user_id not in allowed_users:
         context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, you do not have permission to use this command.")
         return  # Exit the function if the user is not allowed
-    
+
     try:
         response = requests.get("https://antoninoedaiana.it/api/invitations")
         response.raise_for_status()
         invitations = response.json()
         
+        # Initialize counters
+        total_invitations = len(invitations)
+        total_guests = 0
+        accepted_guests = 0
+
         # Process the data and save it to a CSV file
         data = []
         for invitation in invitations:
+            total_guests += len(invitation['guests'])
             for guest in invitation['guests']:
+                if guest['status'] == 'Accepted':
+                    accepted_guests += 1  # Increment accepted guests if status is 'Accepted'
+
                 data.append({
                     'Invitation ID': invitation['invitationId'],
                     'Invitation Number': invitation['invitationNumber'],
@@ -54,6 +63,8 @@ def update(update: Update, context: CallbackContext) -> None:
         
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
+            # Reply with the CSV file and a message
+            update.message.reply_text(f"Totale inviti: {total_invitations}\nTotale Invitati: {total_guests}\nInvitati confermati: {accepted_guests}")
             update.message.reply_document(f)
 
     except requests.exceptions.RequestException as e:
