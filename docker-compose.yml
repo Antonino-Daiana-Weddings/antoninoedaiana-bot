@@ -6,3 +6,8 @@ services:
       - "3003:3003"
     environment:
       - NAME=World
+    volumes:
+      - aed-bot:/app
+
+volumes:
+  aed-bot:
