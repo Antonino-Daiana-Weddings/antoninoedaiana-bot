@@ -61,11 +61,11 @@ def update(update: Update, context: CallbackContext) -> None:
         csv_file = 'invitations.csv'
         df.to_csv(csv_file, index=False)
         
+        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>"
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
             # Reply with the CSV file and a message
-            update.message.reply_text(f"Totale inviti: {total_invitations}\nTotale Invitati: {total_guests}\nInvitati confermati: {accepted_guests}")
-            update.message.reply_document(f)
+            update.message.reply_document(document=f, caption=response_text, parse_mode='HTML')
 
     except requests.exceptions.RequestException as e:
         logger.error(f"Error fetching data: {e}")
