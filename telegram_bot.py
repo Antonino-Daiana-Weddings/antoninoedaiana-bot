@@ -4,9 +4,6 @@ import requests
 import pandas as pd
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # Set up logging
 logging.basicConfig(
