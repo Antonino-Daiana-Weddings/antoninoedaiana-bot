@@ -2,6 +2,7 @@ version: '3.8'
 services:
   telegram_bot:
     build: .
+    restart: always
     ports:
       - "3003:3003"
     environment:
