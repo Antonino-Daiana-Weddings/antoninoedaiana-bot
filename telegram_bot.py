@@ -77,7 +77,7 @@ def update(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     # Create the Updater and pass it your bot's token.
-    updater = Updater(token=os.getenv('TELEGRAM_BOT_TOKEN'))
+    updater = Updater(token=os.environ['TELEGRAM_BOT_TOKEN'])
 
     # Get the dispatcher to register handlers
     dispatcher = updater.dispatcher
