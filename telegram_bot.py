@@ -36,6 +36,7 @@ def update(update: Update, context: CallbackContext) -> None:
         total_invitations = len(invitations)
         total_guests = 0
         accepted_guests = 0
+        declined_guests = 0
 
         # Process the data and save it to a CSV file
         data = []
@@ -44,6 +45,9 @@ def update(update: Update, context: CallbackContext) -> None:
             for guest in invitation['guests']:
                 if guest['status'] == 'Accepted':
                     accepted_guests += 1  # Increment accepted guests if status is 'Accepted'
+
+                if guest['status'] == 'Declined':
+                    declined_guests += 1  # Increment declined guests if status is 'Declined'
 
                 data.append({
                     'Invitation ID': invitation['invitationId'],
@@ -65,7 +69,7 @@ def update(update: Update, context: CallbackContext) -> None:
         csv_file = 'invitations.csv'
         df.to_csv(csv_file, index=False)
         
-        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>"
+        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>\nRifiuti ricevuti: <b>{declined_guests}</b>"
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
             # Reply with the CSV file and a message
