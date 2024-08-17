@@ -28,7 +28,7 @@ def update(update: Update, context: CallbackContext) -> None:
         return  # Exit the function if the user is not allowed
 
     try:
-        response = requests.get("https://antoninoedaiana.it/api/invitations")
+        response = requests.get("https://www.antoninoedaiana.it/api/invitations")
         response.raise_for_status()
         invitations = response.json()
         
