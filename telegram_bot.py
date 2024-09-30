@@ -51,7 +51,7 @@ def update(update: Update, context: CallbackContext) -> None:
                 if guest['status'] == 'Declined':
                     declined_guests += 1  # Increment declined guests if status is 'Declined'
                 
-                if guest['menuType'] == 'kids':
+                if guest['menuKids'] == True or guest['menuType'] == 'true':
                     kids_guests += 1
                     
                 data.append({
