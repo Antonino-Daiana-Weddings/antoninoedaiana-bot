@@ -38,7 +38,7 @@ def update(update: Update, context: CallbackContext) -> None:
         accepted_guests = 0
         potential_guests = 0
         declined_guests = 0
-
+        kids_guests = 0
 
         # Process the data and save it to a CSV file
         data = []
@@ -50,7 +50,10 @@ def update(update: Update, context: CallbackContext) -> None:
 
                 if guest['status'] == 'Declined':
                     declined_guests += 1  # Increment declined guests if status is 'Declined'
-
+                
+                if guest['menuType'] == 'kids':
+                    kids_guests += 1
+                    
                 data.append({
                     'Invitation ID': invitation['invitationId'],
                     'Invitation Number': invitation['invitationNumber'],
@@ -69,12 +72,29 @@ def update(update: Update, context: CallbackContext) -> None:
 
         potential_guests = total_guests - declined_guests
         pending_guests = total_guests - accepted_guests - declined_guests
+        adults_guests = total_guests - kids_guests
         
         df = pd.DataFrame(data)
         csv_file = 'invitations.csv'
         df.to_csv(csv_file, index=False)
         
-        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>\nRifiuti ricevuti: <b>{declined_guests}</b>\nPotenziali partecipanti: <b>{potential_guests}</b>\nIn Attesa risposta: <b>{pending_guests}</b>"
+        response_text = f"""
+        💒 A&D Weddings 💍\n
+        \n
+        <b>Dati</b>\n
+        • Totale partecipazioni: <b>{total_invitations}</b>\n
+        • Totale invitati: <b>{total_guests}</b>\n
+
+        <b>Status partecipanti</b>\n
+        • Partecipanti confermati: <b>{accepted_guests}</b>\n
+        • Partecipanti rifiutati: <b>{declined_guests}</b>\n
+        • Partecipanti in attesa di risposta: <b>{pending_guests}</b>\n
+        • Partecipanti potenziali: <b>{potential_guests}</b>\n
+
+        <b>Classificazione invitati</b>\n
+        • Partecipanti bambini: <b>{kids_guests}</b>\n
+        • Partecipanti adulti: <b>{adults_guests}</b>\n
+        """
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
             # Reply with the CSV file and a message
