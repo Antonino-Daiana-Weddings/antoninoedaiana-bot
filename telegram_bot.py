@@ -72,7 +72,6 @@ def update(update: Update, context: CallbackContext) -> None:
 
         potential_guests = total_guests - declined_guests
         pending_guests = total_guests - accepted_guests - declined_guests
-        adults_guests = total_guests - kids_guests
         
         df = pd.DataFrame(data)
         csv_file = 'invitations.csv'
@@ -93,7 +92,6 @@ def update(update: Update, context: CallbackContext) -> None:
 
 <b>Classificazione invitati</b>
 • Partecipanti bambini: <b>{kids_guests}</b>
-• Partecipanti adulti: <b>{adults_guests}</b>
 """
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
