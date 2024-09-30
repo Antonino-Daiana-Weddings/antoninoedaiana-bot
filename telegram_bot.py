@@ -36,7 +36,9 @@ def update(update: Update, context: CallbackContext) -> None:
         total_invitations = len(invitations)
         total_guests = 0
         accepted_guests = 0
+        potential_guests = 0
         declined_guests = 0
+
 
         # Process the data and save it to a CSV file
         data = []
@@ -65,11 +67,14 @@ def update(update: Update, context: CallbackContext) -> None:
                     'Estimated Participation': guest['estimatedPartecipation'],
                 })
 
+        potential_guests = total_guests - declined_guests
+        pending_guests = total_guests - accepted_guests - declined_guests
+        
         df = pd.DataFrame(data)
         csv_file = 'invitations.csv'
         df.to_csv(csv_file, index=False)
         
-        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>\nRifiuti ricevuti: <b>{declined_guests}</b>"
+        response_text = f"Totale Partecipazioni: <b>{total_invitations}</b>\nTotale Invitati: <b>{total_guests}</b>\nConferme ricevute: <b>{accepted_guests}</b>\nRifiuti ricevuti: <b>{declined_guests}</b>\nPotenziali partecipanti: <b>{potential_guests}</b>\nIn Attesa risposta: <b>{pending_guests}</b>"
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
             # Reply with the CSV file and a message
