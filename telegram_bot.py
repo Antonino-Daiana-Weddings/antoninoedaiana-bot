@@ -79,22 +79,22 @@ def update(update: Update, context: CallbackContext) -> None:
         df.to_csv(csv_file, index=False)
         
         response_text = f"""
-        💒 A&D Weddings 💍
+💒 A&D Weddings 💍
 
-        <b>Dati</b>
-        • Totale partecipazioni: <b>{total_invitations}</b>
-        • Totale invitati: <b>{total_guests}</b>
+<b>Dati</b>
+• Totale partecipazioni: <b>{total_invitations}</b>
+• Totale invitati: <b>{total_guests}</b>
 
-        <b>Status partecipanti</b>
-        • Partecipanti confermati: <b>{accepted_guests}</b>
-        • Partecipanti rifiutati: <b>{declined_guests}</b>
-        • Partecipanti in attesa risposta: <b>{pending_guests}</b>
-        • Partecipanti potenziali: <b>{potential_guests}</b>
+<b>Status partecipanti</b>
+• Partecipanti confermati: <b>{accepted_guests}</b>
+• Partecipanti rifiutati: <b>{declined_guests}</b>
+• Partecipanti in attesa risposta: <b>{pending_guests}</b>
+• Partecipanti potenziali: <b>{potential_guests}</b>
 
-        <b>Classificazione invitati</b>
-        • Partecipanti bambini: <b>{kids_guests}</b>
-        • Partecipanti adulti: <b>{adults_guests}</b>
-        """
+<b>Classificazione invitati</b>
+• Partecipanti bambini: <b>{kids_guests}</b>
+• Partecipanti adulti: <b>{adults_guests}</b>
+"""
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
             # Reply with the CSV file and a message
