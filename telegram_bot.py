@@ -102,6 +102,28 @@ def update(update: Update, context: CallbackContext) -> None:
         logger.error(f"Error fetching data: {e}")
         update.message.reply_text("Failed to fetch data from the API.")
 
+
+def invito(update: Update, context: CallbackContext) -> None:
+    user_id = update.effective_user.id  # Get the user ID of the person who sent the command
+
+    # Check if the user is allowed to use the command
+    if user_id not in allowed_users:
+        context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, you do not have permission to use this command.")
+        return  # Exit the function if the user is not allowed
+    
+    # Get the invitation ID from the user's message
+    invitation_id = context.args[0]
+
+    # Fetch the invitation details from the API and make sure to handle errors appropriately
+    try:
+        response = requests.get(f"https://www.antoninoedaiana.it/api/invitations/{invitation_id}")
+        response.raise_for_status()
+        invitation = response.json()
+        context.bot.send_message(chat_id=update.effective_chat.id, text=invitation['name'])
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching data: {e}")
+        update.message.reply_text("Failed to fetch data from the API.")
+
 def main() -> None:
     # Create the Updater and pass it your bot's token.
     updater = Updater(token=os.environ['TELEGRAM_BOT_TOKEN'])
@@ -112,6 +134,7 @@ def main() -> None:
     # Register the /update command handler
     dispatcher.add_handler(CommandHandler("start", update))
     dispatcher.add_handler(CommandHandler("update", update))
+    dispatcher.add_handler(CommandHandler("invito", invito))
 
     # Start the Bot
     updater.start_polling()
