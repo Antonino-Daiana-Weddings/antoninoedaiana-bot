@@ -122,14 +122,14 @@ def invito(update: Update, context: CallbackContext) -> None:
 
         # Send the invitation details to the user
         response_text = f"""
-<b>{invitation['name']}</b>
-• Status: <b>{invitation['status']}</b>
-• Commento: <i>{invitation['comment']}</i>
+*{invitation['name']}*
+• Status: *{invitation['status']}*
+• Commento: _{invitation['comment']}_
 • Partecipanti:
 """
         for guest in invitation['guests']:
             response_text += f"""
-• - {guest['fullName']} (menu type: {guest['menuType']}, menu kids: {guest['menuKids']}, needs: {guest['needs']}, status: {guest['status']}, nights needed: {guest['nightsNeeded']})
+• {guest['fullName']} (menu type: {guest['menuType']}, menu kids: {guest['menuKids']}, needs: {guest['needs']}, status: {guest['status']}, nights needed: {guest['nightsNeeded']})
 """
 
         context.bot.send_message(chat_id=update.effective_chat.id, text=response_text)
