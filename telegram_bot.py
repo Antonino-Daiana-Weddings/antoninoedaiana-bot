@@ -119,7 +119,20 @@ def invito(update: Update, context: CallbackContext) -> None:
         response = requests.get(f"https://www.antoninoedaiana.it/api/invitations/{invitation_id}")
         response.raise_for_status()
         invitation = response.json()
-        context.bot.send_message(chat_id=update.effective_chat.id, text=invitation['name'])
+
+        # Send the invitation details to the user
+        response_text = f"""
+<b>{invitation['name']}</b>
+• Status: <b>{invitation['status']}</b>
+• Commento: <i>{invitation['comment']}</i>
+• Partecipanti:
+"""
+        for guest in invitation['guests']:
+            response_text += f"""
+• - {guest['fullName']} (menu type: {guest['menuType']}, menu kids: {guest['menuKids']}, needs: {guest['needs']}, status: {guest['status']}, nights needed: {guest['nightsNeeded']})
+"""
+
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response_text)
     except requests.exceptions.RequestException as e:
         logger.error(f"Error fetching data: {e}")
         update.message.reply_text("Failed to fetch data from the API.")
