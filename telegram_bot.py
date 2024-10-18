@@ -39,6 +39,7 @@ def update(update: Update, context: CallbackContext) -> None:
         potential_guests = 0
         declined_guests = 0
         kids_guests = 0
+        hotel_guests = 0
 
         # Process the data and save it to a CSV file
         data = []
@@ -53,6 +54,9 @@ def update(update: Update, context: CallbackContext) -> None:
                 
                 if guest['menuKids'] == True or guest['menuType'] == 'true':
                     kids_guests += 1
+
+                if guest['needs'] == 'Hotel-Only':
+                    hotel_guests += 1
                     
                 data.append({
                     'Invitation ID': invitation['invitationId'],
@@ -92,6 +96,7 @@ def update(update: Update, context: CallbackContext) -> None:
 
 <b>Classificazione invitati</b>
 • Partecipanti bambini: <b>{kids_guests}</b>
+• Necessitano albergo: <b>{hotel_guests}</b>
 """
         # Send the CSV file to the user
         with open(csv_file, 'rb') as f:
@@ -132,7 +137,7 @@ def invito(update: Update, context: CallbackContext) -> None:
 • {guest['fullName']} (menu type: {guest['menuType']}, menu kids: {guest['menuKids']}, needs: {guest['needs']}, status: {guest['status']}, nights needed: {guest['nightsNeeded']})
 """
 
-        context.bot.send_message(chat_id=update.effective_chat.id, text=response_text)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=response_text, parse_mode='Markdown')
     except requests.exceptions.RequestException as e:
         logger.error(f"Error fetching data: {e}")
         update.message.reply_text("Failed to fetch data from the API.")
