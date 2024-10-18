@@ -123,6 +123,8 @@ def invito(update: Update, context: CallbackContext) -> None:
     try:
         response = requests.get(f"https://www.antoninoedaiana.it/api/invitations/{invitation_id}")
         response.raise_for_status()
+        if response.status_code == 404:
+            raise Exception("Invitation not found")
         invitation = response.json()
 
         # Send the invitation details to the user
@@ -139,8 +141,12 @@ def invito(update: Update, context: CallbackContext) -> None:
 
         context.bot.send_message(chat_id=update.effective_chat.id, text=response_text, parse_mode='Markdown')
     except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching data: {e}")
-        update.message.reply_text("Failed to fetch data from the API.")
+        # If exception was raised due to invitation not found, tell to user
+        if response.status_code == 404:
+            update.message.reply_text("Invitation not found.")
+        else:
+            logger.error(f"Error fetching data: {e}")
+            update.message.reply_text("Failed to fetch data from the API.")
 
 def main() -> None:
     # Create the Updater and pass it your bot's token.
